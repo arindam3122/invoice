@@ -1288,7 +1288,7 @@ function downloadPDF() {
     });
 
     // ======================================
-    // 10. SUMMARY CARD
+    // 10. SUMMARY BOX - GREEN BORDER
     // ======================================
 
     const summaryHeight = hasDeduction ? 43 : 32;
@@ -1310,33 +1310,25 @@ function downloadPDF() {
         finalY = 25;
     }
 
-    // Summary background
+    // Draw white background with green border
 
-    doc.setFillColor(...lightYellow);
-
-    doc.roundedRect(
-        summaryX,
-        finalY,
-        summaryWidth,
-        summaryHeight,
-        4,
-        4,
-        "F"
-    );
-
-    doc.setDrawColor(...yellow);
+    doc.setFillColor(...white);
+    doc.setDrawColor(190, 215, 200);
+    doc.setLineWidth(0.5);
 
     doc.roundedRect(
         summaryX,
         finalY,
         summaryWidth,
         summaryHeight,
-        4,
-        4,
-        "S"
+        3,
+        3,
+        "FD"
     );
 
-    // Subtotal
+    // ======================================
+    // 11. SUBTOTAL - NORMAL TEXT
+    // ======================================
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
@@ -1348,7 +1340,7 @@ function downloadPDF() {
         finalY + 10
     );
 
-    doc.setTextColor(...darkBlue);
+    doc.setTextColor(...black);
 
     doc.text(
         "Rs. " + subtotal.toFixed(2),
@@ -1358,7 +1350,7 @@ function downloadPDF() {
     );
 
     // ======================================
-    // 11. DEDUCTION - RED
+    // 12. DEDUCTION - RED TEXT
     // ======================================
 
     let grandTotalY = finalY + 21;
@@ -1367,7 +1359,7 @@ function downloadPDF() {
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        doc.setTextColor(...darkRed);
+        doc.setTextColor(...red);
 
         doc.text(
             "Deduction",
@@ -1389,40 +1381,12 @@ function downloadPDF() {
     }
 
     // ======================================
-    // 12. GRAND TOTAL - YELLOW
+    // 13. GRAND TOTAL - GREEN TEXT
     // ======================================
 
-    doc.setFillColor(...yellow);
-
-    doc.roundedRect(
-        summaryX,
-        grandTotalY - 6,
-        summaryWidth,
-        14,
-        3,
-        3,
-        "F"
-    );
-
-    // Blue accent
-
-    doc.setFillColor(...blue);
-
-    doc.roundedRect(
-        summaryX,
-        grandTotalY - 6,
-        2,
-        14,
-        1,
-        1,
-        "F"
-    );
-
-    // Grand total text
-
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(...darkBlue);
+    doc.setFontSize(11);
+    doc.setTextColor(...green);
 
     doc.text(
         "GRAND TOTAL",
@@ -1438,7 +1402,7 @@ function downloadPDF() {
     );
 
     // ======================================
-    // 13. HARE KRISHNA FOOTER
+    // 14. HARE KRISHNA FOOTER
     // ======================================
 
     const footerY = grandTotalY + 25;
@@ -1478,9 +1442,8 @@ function downloadPDF() {
     doc.setFontSize(9);
     doc.setTextColor(...grey);
 
-
     // ======================================
-    // 14. PAGE NUMBERS
+    // 15. PAGE NUMBERS
     // ======================================
 
     const totalPages = doc.internal.getNumberOfPages();
@@ -1502,7 +1465,7 @@ function downloadPDF() {
     }
 
     // ======================================
-    // 15. DOWNLOAD PDF
+    // 16. DOWNLOAD PDF
     // ======================================
 
     try {
