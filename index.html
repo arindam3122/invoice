@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radha Madhav Press - Billing</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>Radha Madhav Press</h1>
+        <p>Suri, Birbhum</p>
+    </header>
+
+    <section class="billing-form">
+        <h2>Create Bill</h2>
+
+        <div class="form-grid">
+
+            <div class="input-group">
+                <label>Date</label>
+                <input type="date" id="date">
+            </div>
+
+            <div class="input-group">
+                <label>Customer Name</label>
+                <input type="text" id="customerName"
+                       placeholder="Enter customer name">
+            </div>
+
+            <div class="input-group">
+                <label>Product Name</label>
+                <input type="text" id="product"
+                       placeholder="Enter product name">
+            </div>
+
+            <div class="input-group">
+                <label>Price (₹)</label>
+                <input type="number" id="price"
+                       placeholder="Enter price" min="0" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label>Quantity</label>
+                <input type="number" id="quantity"
+                       placeholder="Enter quantity" min="1" step="1">
+            </div>
+
+            <div class="input-group">
+                <label>Total (₹)</label>
+                <input type="number" id="total"
+                       placeholder="Automatic total" readonly>
+            </div>
+
+        </div>
+
+        <button class="add-btn" id="addBtn" onclick="addProduct()">
+            + Add Product
+        </button>
+    </section>
+
+
+    <section class="table-section">
+
+        <h2>Product Details</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SL No.</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="billTable">
+                    <tr>
+                        <td colspan="6" class="empty">
+                            No products added yet
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="bill-summary">
+
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <strong>₹<span id="subtotal">0.00</span></strong>
+            </div>
+
+            <div class="deduction-box">
+                <label>Deduction (Optional)</label>
+                <input type="number" id="deduction"
+                       placeholder="Enter deduction amount"
+                       min="0" step="0.01">
+            </div>
+
+            <div class="summary-row grand-total">
+                <span>Grand Total:</span>
+                <strong>₹<span id="grandTotal">0.00</span></strong>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="button-section">
+
+        <button class="pdf-btn" onclick="downloadPDF()">
+            Download PDF
+        </button>
+
+        <button class="menu-btn" onclick="openMenu()">
+            View Menu
+        </button>
+
+        <button class="clear-btn" onclick="clearBill()">
+            Clear Bill
+        </button>
+
+    </section>
+
+</div>
+
+
+<!-- EDIT PRODUCT POPUP -->
+
+<div id="editModal" class="modal">
+
+    <div class="modal-content edit-content">
+
+        <span class="close" onclick="closeEdit()">&times;</span>
+
+        <h2>Edit Product</h2>
+        <p>Update your product details below.</p>
+
+        <div class="edit-fields">
+
+            <div class="input-group">
+                <label>Date</label>
+                <input type="date" id="editDate">
+            </div>
+
+            <div class="input-group">
+                <label>Product Name</label>
+                <input type="text" id="editProduct">
+            </div>
+
+            <div class="input-group">
+                <label>Price (₹)</label>
+                <input type="number" id="editPrice"
+                       min="0" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label>Quantity</label>
+                <input type="number" id="editQuantity"
+                       min="1" step="1">
+            </div>
+
+        </div>
+
+        <div class="popup-buttons">
+            <button class="save-btn" onclick="saveEdit()">
+                Save Changes
+            </button>
+
+            <button class="cancel-btn" onclick="closeEdit()">
+                Cancel
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MENU POPUP -->
+
+<div id="menuModal" class="modal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="closeMenu()">&times;</span>
+
+        <h2>Radha Madhav Press Menu</h2>
+        <p>Click on a product to add it to the billing form.</p>
+
+        <div id="menuItems"></div>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

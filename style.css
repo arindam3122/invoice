@@ -1,0 +1,356 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f4f7;
+    color: #333;
+    padding: 25px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+
+header {
+    text-align: center;
+    background: #173f35;
+    color: white;
+    padding: 28px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+header p {
+    font-size: 17px;
+    letter-spacing: 1px;
+}
+
+/* FORM */
+
+section h2 {
+    margin-bottom: 20px;
+    color: #173f35;
+    font-size: 22px;
+}
+
+.billing-form {
+    margin-bottom: 35px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label,
+.deduction-box label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 2px rgba(25,135,84,0.10);
+}
+
+input[readonly] {
+    background: #eeeeee;
+}
+
+/* BUTTONS */
+
+button {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+button:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.add-btn {
+    background: #198754;
+    color: white;
+    margin-top: 20px;
+}
+
+/* TABLE */
+
+.table-section {
+    margin-top: 20px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th, td {
+    padding: 13px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background: #173f35;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
+    background: #f4f8f5;
+}
+
+.empty {
+    padding: 25px;
+    color: #777;
+}
+
+/* TABLE ACTIONS */
+
+.edit-btn {
+    background: #ffc107;
+    color: #222;
+    padding: 7px 12px;
+    margin: 3px;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    padding: 7px 12px;
+    margin: 3px;
+}
+
+/* BILL SUMMARY */
+
+.bill-summary {
+    max-width: 350px;
+    margin-left: auto;
+    margin-top: 25px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-size: 17px;
+}
+
+.deduction-box {
+    margin: 12px 0;
+}
+
+.grand-total {
+    border-top: 2px solid #173f35;
+    font-size: 21px;
+    color: #198754;
+    font-weight: bold;
+}
+
+/* MAIN BUTTONS */
+
+.button-section {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 35px;
+}
+
+.pdf-btn {
+    background: #198754;
+    color: white;
+}
+
+.menu-btn {
+    background: #173f35;
+    color: white;
+}
+
+.clear-btn {
+    background: #dc3545;
+    color: white;
+}
+
+/* POPUPS */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.65);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background: white;
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    animation: popup 0.25s ease;
+}
+
+@keyframes popup {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h2 {
+    color: #173f35;
+    margin-bottom: 12px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.close {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+    color: #555;
+}
+
+.close:hover {
+    color: red;
+}
+
+/* EDIT POPUP */
+
+.edit-content {
+    max-width: 450px;
+}
+
+.edit-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+}
+
+.popup-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.save-btn {
+    background: #198754;
+    color: white;
+    flex: 1;
+}
+
+.cancel-btn {
+    background: #6c757d;
+    color: white;
+    flex: 1;
+}
+
+/* MENU */
+
+.menu-item {
+    padding: 14px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: #e9f5ee;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .button-section button {
+        width: 100%;
+    }
+
+    .bill-summary {
+        width: 100%;
+    }
+
+    .popup-buttons button {
+        padding: 12px 8px;
+    }
+}
