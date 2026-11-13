@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,104 +19,115 @@
         <p>Suri, Birbhum</p>
     </header>
 
-    <section class="billing-form">
-        <h2>Create Bill</h2>
+    <!-- TWO CARD LAYOUT CONTAINER -->
+    <div class="main-cards-grid">
 
-        <div class="form-grid">
+        <!-- LEFT SIDE CARD: Customer Details & Add Product Form -->
+        <div class="card left-card">
+            <section class="billing-form">
+                <h2>Create Bill</h2>
 
-            <div class="input-group">
-                <label>Date</label>
-                <input type="date" id="date">
-            </div>
+                <div class="form-grid">
 
-            <div class="input-group">
-                <label>Customer Name</label>
-                <input type="text" id="customerName"
-                       placeholder="Enter customer name">
-            </div>
+                    <div class="input-group">
+                        <label>Date</label>
+                        <input type="date" id="date">
+                    </div>
 
-            <div class="input-group">
-                <label>Product Name</label>
-                <input type="text" id="product"
-                       placeholder="Enter product name">
-            </div>
+                    <div class="input-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="customerName"
+                               placeholder="Enter customer name">
+                    </div>
 
-            <div class="input-group">
-                <label>Price (₹)</label>
-                <input type="number" id="price"
-                       placeholder="Enter price" min="0" step="0.01">
-            </div>
+                    <div class="input-group">
+                        <label>Product Name</label>
+                        <input type="text" id="product"
+                               placeholder="Enter product name">
+                    </div>
 
-            <div class="input-group">
-                <label>Quantity</label>
-                <input type="number" id="quantity"
-                       placeholder="Enter quantity" min="1" step="1">
-            </div>
+                    <div class="input-group">
+                        <label>Price (₹)</label>
+                        <input type="number" id="price"
+                               placeholder="Enter price" min="0" step="0.01">
+                    </div>
 
-            <div class="input-group">
-                <label>Total (₹)</label>
-                <input type="number" id="total"
-                       placeholder="Automatic total" readonly>
-            </div>
+                    <div class="input-group">
+                        <label>Quantity</label>
+                        <input type="number" id="quantity"
+                               placeholder="Enter quantity" min="1" step="1">
+                    </div>
 
-        </div>
+                    <div class="input-group">
+                        <label>Total (₹)</label>
+                        <input type="number" id="total"
+                               placeholder="Automatic total" readonly>
+                    </div>
 
-        <button class="add-btn" id="addBtn" onclick="addProduct()">
-            + Add Product
-        </button>
-    </section>
+                </div>
 
-
-    <section class="table-section">
-
-        <h2>Product Details</h2>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>SL No.</th>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-
-                <tbody id="billTable">
-                    <tr>
-                        <td colspan="6" class="empty">
-                            No products added yet
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                <button class="add-btn" id="addBtn" onclick="addProduct()">
+                    + Add Product
+                </button>
+            </section>
         </div>
 
 
-        <div class="bill-summary">
+        <!-- RIGHT SIDE CARD: Items Table & Total Price Summary -->
+        <div class="card right-card">
+            <section class="table-section">
 
-            <div class="summary-row">
-                <span>Subtotal:</span>
-                <strong>₹<span id="subtotal">0.00</span></strong>
-            </div>
+                <h2>Product Details & Total</h2>
 
-            <div class="deduction-box">
-                <label>Deduction (Optional)</label>
-                <input type="number" id="deduction"
-                       placeholder="Enter deduction amount"
-                       min="0" step="0.01">
-            </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-            <div class="summary-row grand-total">
-                <span>Grand Total:</span>
-                <strong>₹<span id="grandTotal">0.00</span></strong>
-            </div>
+                        <tbody id="billTable">
+                            <tr>
+                                <td colspan="6" class="empty">
+                                    No products added yet
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
+
+                <div class="bill-summary">
+
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <strong>₹<span id="subtotal">0.00</span></strong>
+                    </div>
+
+                    <div class="deduction-box">
+                        <label>Deduction (Optional)</label>
+                        <input type="number" id="deduction"
+                               placeholder="Enter deduction amount"
+                               min="0" step="0.01">
+                    </div>
+
+                    <div class="summary-row grand-total">
+                        <span>Grand Total:</span>
+                        <strong>₹<span id="grandTotal">0.00</span></strong>
+                    </div>
+
+                </div>
+
+            </section>
         </div>
 
-    </section>
+    </div>
 
 
     <section class="button-section">
