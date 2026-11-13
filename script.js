@@ -30,12 +30,8 @@ let editingIndex = -1;
 const menu = [
     { name: "Visiting Card", price: 2 },
     { name: "Bill Book", price: 100 },
-    { name: "Letter Head", price: 3 },
-    { name: "Wedding Card", price: 15 },
-    { name: "Poster", price: 20 },
-    { name: "Pamphlet", price: 2 },
-    { name: "Sticker", price: 5 },
-    { name: "ID Card", price: 20 }
+    { name: "Sticker", price: 40 },
+    { name: "ID Card", price: 60 }
 ];
 
 
@@ -61,24 +57,26 @@ const deductionInput = document.getElementById("deduction");
 const notificationStyle = document.createElement("style");
 
 notificationStyle.textContent = `
-    #pressNotification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 99999;
-        width: min(350px, calc(100vw - 40px));
-        padding: 15px 18px;
-        border-radius: 12px;
-        background: #ffffff;
-        color: #173f34;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.18);
-        border-left: 5px solid #c49a4a;
-        display: none;
-        align-items: center;
-        gap: 12px;
-        font-family: Arial, sans-serif;
-        animation: pressSlideIn 0.3s ease;
-    }
+#pressNotification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    top: auto;
+    right: auto;
+    z-index: 99999;
+    width: min(350px, calc(100vw - 40px));
+    padding: 15px 18px;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #173f34;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    border-left: 5px solid #c49a4a;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    font-family: Arial, sans-serif;
+    animation: pressSlideIn 0.3s ease;
+}
 
     #pressNotification.show {
         display: flex;
@@ -187,14 +185,15 @@ notificationStyle.textContent = `
             transform: translateY(0);
         }
     }
-
-    @media(max-width: 500px) {
-        #pressNotification {
-            top: 12px;
-            right: 10px;
-            width: calc(100vw - 40px);
-        }
+        @media(max-width: 500px) {
+    #pressNotification {
+        bottom: 12px;
+        left: 10px;
+        top: auto;
+        right: auto;
+        width: calc(100vw - 20px);
     }
+}
 `;
 
 document.head.appendChild(notificationStyle);
