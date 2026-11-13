@@ -30,8 +30,8 @@ let editingIndex = -1;
 const menu = [
     { name: "Visiting Card", price: 2 },
     { name: "Bill Book", price: 100 },
-    { name: "Sticker", price: 40 },
-    { name: "ID Card", price: 60 }
+    { name: "School Notebook Sticker", price: 40 },
+    { name: "School ID Card", price: 60 }
 ];
 
 
