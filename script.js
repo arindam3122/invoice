@@ -29,7 +29,7 @@ let editingIndex = -1;
 
 const menu = [
     { name: "Visiting Card", price: 2 },
-    { name: "Bill Book", price: 100 },
+    { name: "School Report Card", price: 25 },
     { name: "School Notebook Sticker", price: 40 },
     { name: "School ID Card", price: 60 }
 ];
