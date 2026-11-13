@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radha Madhav Press - Billing System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf library for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-amber-50/55 min-h-screen text-slate-800">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-amber-700 via-orange-600 to-amber-800 text-white shadow-lg py-6 px-4 mb-6">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-md">Radha Madhav Press</h1>
+            <p class="text-amber-100 text-sm md:text-base font-medium mt-1 tracking-wider">Suri, Birbhum</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 pb-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Side: Input Form -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-md border border-amber-100">
+                <h2 class="text-lg font-semibold text-amber-900 mb-4 pb-2 border-b border-amber-100 flex items-center gap-2">
+                    <i class="fa-solid fa-cart-plus text-amber-600"></i> Add Product
+                </h2>
+                <form id="billingForm" class="space-y-4">
+                    <input type="hidden" id="editIndex" value="-1">
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Date</label>
+                        <input type="date" id="itemDate" required
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Product Name</label>
+                        <input type="text" id="itemName" placeholder="e.g. Bill Book, Visiting Cards" required
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Price (₹)</label>
+                            <input type="number" id="itemPrice" step="0.01" min="0" placeholder="0.00" required
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Quantity</label>
+                            <input type="number" id="itemQty" min="1" value="1" required
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Total (₹)</label>
+                        <input type="number" id="itemTotal" readonly placeholder="0.00"
+                            class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg text-slate-600 font-medium text-sm cursor-not-allowed">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Deduction / Discount (₹)</label>
+                        <input type="number" id="itemDeduction" step="0.01" min="0" placeholder="0.00 (Optional)"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="submitBtn"
+                            class="w-full bg-amber-700 hover:bg-amber-800 text-white font-medium py-2.5 px-4 rounded-lg shadow transition duration-200 flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-plus"></i> Add to Table
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Side: Table and Summary -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                
+                <!-- Table Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-amber-100 flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-amber-100">
+                            <h2 class="text-lg font-semibold text-amber-900 flex items-center gap-2">
+                                <i class="fa-solid fa-table-list text-amber-600"></i> Invoice Items
+                            </h2>
+                            <span id="itemCountBadge" class="text-xs bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full font-medium">0 Items</span>
+                        </div>
+
+                        <!-- Responsive Table Wrapper -->
+                        <div class="overflow-x-auto max-h-[350px] overflow-y-auto rounded-lg border border-slate-200">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-amber-50 text-amber-900 sticky top-0 text-xs uppercase tracking-wider z-10">
+                                    <tr>
+                                        <th class="p-3">Date</th>
+                                        <th class="p-3">Product Name</th>
+                                        <th class="p-3 text-right">Price</th>
+                                        <th class="p-3 text-center">Qty</th>
+                                        <th class="p-3 text-right">Total</th>
+                                        <th class="p-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoiceTableBody" class="divide-y divide-slate-100 text-sm">
+                                    <tr id="emptyRow">
+                                        <td colspan="6" class="text-center py-8 text-slate-400 italic">No products added yet. Use the form to add items.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Summary Totals Section -->
+                    <div class="mt-6 pt-4 border-t border-slate-200 space-y-2 bg-slate-50 p-4 rounded-xl">
+                        <div class="flex justify-between text-sm text-slate-600">
+                            <span>Subtotal:</span>
+                            <span id="summarySubtotal" class="font-medium text-slate-800">₹0.00</span>
+                        </div>
+                        <div id="summaryDeductionRow" class="flex justify-between text-sm text-rose-600 hidden">
+                            <span>Deduction / Discount:</span>
+                            <span id="summaryDeduction" class="font-medium">- ₹0.00</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-amber-900 pt-2 border-t border-slate-200">
+                            <span>Grand Total:</span>
+                            <span id="summaryGrandTotal">₹0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons below table -->
+                    <div class="flex flex-wrap gap-3 mt-6 pt-2">
+                        <button onclick="downloadPDF()" 
+                            class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2.5 px-4 rounded-lg shadow transition duration-200 flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-file-pdf"></i> Download PDF
+                        </button>
+                        <button onclick="openMenuModal()" 
+                            class="flex-1 bg-sky-700 hover:bg-sky-800 text-white font-medium py-2.5 px-4 rounded-lg shadow transition duration-200 flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-eye"></i> View Menu / Preview
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Hidden Printable / PDF Template Layout (Clean format as requested) -->
+    <div id="pdfTemplate" class="hidden bg-white p-8 max-w-[800px] mx-auto text-slate-800 font-sans">
+        <!-- PDF Header -->
+        <div class="text-center mb-6 pb-4 border-b-2 border-amber-800">
+            <h1 class="text-2xl font-bold uppercase tracking-wider text-amber-900">Radha Madhav Press</h1>
+            <p class="text-sm font-medium text-slate-600 mt-1">Suri, Birbhum</p>
+        </div>
+
+        <!-- Meta Bill Info -->
+        <div class="flex justify-between text-xs mb-4 text-slate-600">
+            <div><strong>Date Generated:</strong> <span id="pdfCurrentDate"></span></div>
+            <div><strong>Invoice Bill</strong></div>
+        </div>
+
+        <!-- PDF Table -->
+        <table class="w-full text-left border-collapse mb-6 text-sm">
+            <thead>
+                <tr class="bg-amber-100 text-amber-900 border-b border-amber-300 text-xs uppercase">
+                    <th class="p-2.5 border border-amber-200">Date</th>
+                    <th class="p-2.5 border border-amber-200">Product Name</th>
+                    <th class="p-2.5 border border-amber-200 text-right">Price (₹)</th>
+                    <th class="p-2.5 border border-amber-200 text-center">Qty</th>
+                    <th class="p-2.5 border border-amber-200 text-right">Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody id="pdfTableBody">
+                <!-- Dynamically filled -->
+            </tbody>
+        </table>
+
+        <!-- PDF Totals -->
+        <div class="flex justify-end mb-8">
+            <div class="w-64 space-y-1.5 text-sm">
+                <div class="flex justify-between text-slate-600">
+                    <span>Subtotal:</span>
+                    <span id="pdfSubtotal">₹0.00</span>
+                </div>
+                <div id="pdfDeductionRow" class="flex justify-between text-rose-600 hidden">
+                    <span>Deduction:</span>
+                    <span id="pdfDeduction">₹0.00</span>
+                </div>
+                <div class="flex justify-between font-bold text-amber-900 text-base pt-2 border-t border-slate-300">
+                    <span>Grand Total:</span>
+                    <span id="pdfGrandTotal">₹0.00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Footer Requirement -->
+        <div class="text-center mt-12 pt-6 border-t border-slate-200">
+            <h3 class="text-xl font-bold tracking-widest text-amber-900">HARE KRISHNA</h3>
+        </div>
+    </div>
+
+    <!-- View Menu / Preview Modal -->
+    <div id="menuModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="bg-amber-800 text-white p-4 flex justify-between items-center">
+                <h3 class="font-semibold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-receipt"></i> Invoice Preview
+                </h3>
+                <button onclick="closeMenuModal()" class="text-white hover:text-amber-200 text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto bg-slate-50 flex-1">
+                <div id="modalPreviewContent" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <!-- Cloned preview layout -->
+                </div>
+            </div>
+            <div class="p-4 bg-white border-t border-slate-200 flex justify-end gap-3">
+                <button onclick="downloadPDF()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF
+                </button>
+                <button onclick="closeMenuModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-lg text-sm font-medium">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Notification Box (Instead of alert) -->
+    <div id="notificationToast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">Action completed successfully</span>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Set default date to today
+        document.getElementById('itemDate').valueAsDate = new Date();
+
+        let invoiceItems = [];
+
+        const priceInput = document.getElementById('itemPrice');
+        const qtyInput = document.getElementById('itemQty');
+        const totalInput = document.getElementById('itemTotal');
+        const form = document.getElementById('billingForm');
+
+        // Auto calculate total on price or quantity change
+        function calculateTotal() {
+            const price = parseFloat(priceInput.value) || 0;
+            const qty = parseInt(qtyInput.value) || 0;
+            totalInput.value = (price * qty).toFixed(2);
+        }
+
+        priceInput.addEventListener('input', calculateTotal);
+        qtyInput.addEventListener('input', calculateTotal);
+
+        // Form Submit Handler (Add or Edit)
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('itemDate').value;
+            const name = document.getElementById('itemName').value.trim();
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const qty = parseInt(document.getElementById('itemQty').value);
+            const total = parseFloat(totalInput.value);
+            const deduction = parseFloat(document.getElementById('itemDeduction').value) || 0;
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+
+            const itemData = { date, name, price, qty, total, deduction };
+
+            if (editIndex === -1) {
+                invoiceItems.push(itemData);
+                showToast('Product added successfully!', 'success');
+            } else {
+                invoiceItems[editIndex] = itemData;
+                document.getElementById('editIndex').value = -1;
+                document.getElementById('submitBtn').innerHTML = '<i class="fa-solid fa-plus"></i> Add to Table';
+                showToast('Product updated successfully!', 'success');
+            }
+
+            form.reset();
+            document.getElementById('itemDate').valueAsDate = new Date();
+            totalInput.value = '';
+            renderTable();
+        });
+
+        // Render Table and Summary Calculations
+        function renderTable() {
+            const tbody = document.getElementById('invoiceTableBody');
+            const countBadge = document.getElementById('itemCountBadge');
+            tbody.innerHTML = '';
+
+            if (invoiceItems.length === 0) {
+                tbody.innerHTML = `<tr id="emptyRow"><td colspan="6" class="text-center py-8 text-slate-400 italic">No products added yet. Use the form to add items.</td></tr>`;
+                countBadge.textContent = '0 Items';
+                updateSummary(0, 0);
+                return;
+            }
+
+            countBadge.textContent = `${invoiceItems.length} Item${invoiceItems.length > 1 ? 's' : ''}`;
+            let subtotal = 0;
+            let currentDeduction = 0;
+
+            invoiceItems.forEach((item, index) => {
+                subtotal += item.total;
+                if (item.deduction > currentDeduction) {
+                    currentDeduction = item.deduction; // Keeps latest or max deduction recorded
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-amber-50/40 transition duration-150";
+                tr.innerHTML = `
+                    <td class="p-3 text-xs text-slate-600">${item.date}</td>
+                    <td class="p-3 font-medium text-slate-800">${escapeHtml(item.name)}</td>
+                    <td class="p-3 text-right text-slate-600">₹${item.price.toFixed(2)}</td>
+                    <td class="p-3 text-center text-slate-600">${item.qty}</td>
+                    <td class="p-3 text-right font-medium text-slate-800">₹${item.total.toFixed(2)}</td>
+                    <td class="p-3 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="editItem(${index})" title="Edit" class="text-amber-600 hover:text-amber-800 p-1">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteItem(${index})" title="Delete" class="text-rose-600 hover:text-rose-800 p-1">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Also check global deduction input if any
+            const globalDeductionInput = parseFloat(document.getElementById('itemDeduction').value) || 0;
+            const finalDeduction = Math.max(currentDeduction, globalDeductionInput);
+
+            updateSummary(subtotal, finalDeduction);
+        }
+
+        function updateSummary(subtotal, deduction) {
+            document.getElementById('summarySubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            
+            const deductionRow = document.getElementById('summaryDeductionRow');
+            const deductionSpan = document.getElementById('summaryDeduction');
+            const grandTotalEl = document.getElementById('summaryGrandTotal');
+
+            if (deduction > 0) {
+                deductionRow.classList.remove('hidden');
+                deductionSpan.textContent = `- ₹${deduction.toFixed(2)}`;
+            } else {
+                deductionRow.classList.add('hidden');
+            }
+
+            const grandTotal = Math.max(0, subtotal - deduction);
+            grandTotalEl.textContent = `₹${grandTotal.toFixed(2)}`;
+        }
+
+        // Edit Item
+        function editItem(index) {
+            const item = invoiceItems[index];
+            document.getElementById('itemDate').value = item.date;
+            document.getElementById('itemName').value = item.name;
+            document.getElementById('itemPrice').value = item.price;
+            document.getElementById('itemQty').value = item.qty;
+            document.getElementById('itemTotal').value = item.total.toFixed(2);
+            document.getElementById('itemDeduction').value = item.deduction > 0 ? item.deduction : '';
+            document.getElementById('editIndex').value = index;
+            document.getElementById('submitBtn').innerHTML = '<i class="fa-solid fa-check"></i> Update Product';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast('Loaded item for editing', 'info');
+        }
+
+        // Delete Item
+        function deleteItem(index) {
+            invoiceItems.splice(index, 1);
+            renderTable();
+            showToast('Item removed from table', 'error');
+        }
+
+        // Modal View Menu / Preview
+        function openMenuModal() {
+            if (invoiceItems.length === 0) {
+                showToast('Please add at least one product to preview invoice.', 'error');
+                return;
+            }
+            preparePDFTemplateContent();
+            document.getElementById('modalPreviewContent').innerHTML = document.getElementById('pdfTemplate').innerHTML;
+            document.getElementById('menuModal').classList.remove('hidden');
+        }
+
+        function closeMenuModal() {
+            document.getElementById('menuModal').classList.add('hidden');
+        }
+
+        // Prepare PDF structure content
+        function preparePDFTemplateContent() {
+            document.getElementById('pdfCurrentDate').textContent = new Date().toLocaleDateString();
+            const pdfTbody = document.getElementById('pdfTableBody');
+            pdfTbody.innerHTML = '';
+
+            let subtotal = 0;
+            let deduction = parseFloat(document.getElementById('itemDeduction').value) || 0;
+
+            invoiceItems.forEach(item => {
+                subtotal += item.total;
+                if (item.deduction > deduction) deduction = item.deduction;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-2 border border-amber-200 text-xs">${item.date}</td>
+                    <td class="p-2 border border-amber-200">${escapeHtml(item.name)}</td>
+                    <td class="p-2 border border-amber-200 text-right">₹${item.price.toFixed(2)}</td>
+                    <td class="p-2 border border-amber-200 text-center">${item.qty}</td>
+                    <td class="p-2 border border-amber-200 text-right font-medium">₹${item.total.toFixed(2)}</td>
+                `;
+                pdfTbody.appendChild(tr);
+            });
+
+            document.getElementById('pdfSubtotal').textContent = `₹${subtotal.toFixed(2)}`;
+
+            const pdfDeductionRow = document.getElementById('pdfDeductionRow');
+            const pdfDeductionSpan = document.getElementById('pdfDeduction');
+
+            if (deduction > 0) {
+                pdfDeductionRow.classList.remove('hidden');
+                pdfDeductionSpan.textContent = `- ₹${deduction.toFixed(2)}`;
+            } else {
+                pdfDeductionRow.classList.add('hidden');
+            }
+
+            const grandTotal = Math.max(0, subtotal - deduction);
+            document.getElementById('pdfGrandTotal').textContent = `₹${grandTotal.toFixed(2)}`;
+        }
+
+        // Download PDF Function
+        function downloadPDF() {
+            if (invoiceItems.length === 0) {
+                showToast('Cannot download empty invoice. Add items first.', 'error');
+                return;
+            }
+
+            preparePDFTemplateContent();
+            const element = document.getElementById('pdfTemplate');
+            element.classList.remove('hidden');
+
+            const opt = {
+                margin:       10,
+                filename:     `Radha_Madhav_Press_Invoice_${new Date().toISOString().slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).set(opt).save().then(() => {
+                element.classList.add('hidden');
+                closeMenuModal();
+                showToast('PDF downloaded successfully!', 'success');
+            }).catch(err => {
+                console.error(err);
+                element.classList.add('hidden');
+                showToast('Error generating PDF', 'error');
+            });
+        }
+
+        // Custom Toast Notification System (replaces alert)
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('notificationToast');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+
+            msgEl.textContent = message;
+
+            if (type === 'success') {
+                iconEl.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+            } else if (type === 'error') {
+                iconEl.className = 'fa-solid fa-circle-exclamation text-rose-400 text-lg';
+            } else {
+                iconEl.className = 'fa-solid fa-circle-info text-sky-400 text-lg';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // HTML Escape helper
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>
