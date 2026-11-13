@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radha Madhav Press - Billing</title>
+    <title>Radha Madhav Press - Billing System</title>
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -15,6 +15,7 @@
 <div class="container">
 
     <header>
+        <div class="header-badge">Invoice & Billing Manager</div>
         <h1>Radha Madhav Press</h1>
         <p>Suri, Birbhum</p>
     </header>
@@ -25,7 +26,7 @@
         <!-- LEFT SIDE CARD: Customer Details & Add Product Form -->
         <div class="card left-card">
             <section class="billing-form">
-                <h2>Create Bill</h2>
+                <h2><span class="icon">📝</span> Create & Add Item</h2>
 
                 <div class="form-grid">
 
@@ -67,7 +68,7 @@
                 </div>
 
                 <button class="add-btn" id="addBtn" onclick="addProduct()">
-                    + Add Product
+                    + Add to Bill
                 </button>
             </section>
         </div>
@@ -77,7 +78,7 @@
         <div class="card right-card">
             <section class="table-section">
 
-                <h2>Product Details & Total</h2>
+                <h2><span class="icon">🛒</span> Item Summary & Totals</h2>
 
                 <div class="table-wrapper">
                     <table>
@@ -133,15 +134,15 @@
     <section class="button-section">
 
         <button class="pdf-btn" onclick="downloadPDF()">
-            Download PDF
+            📥 Download PDF
         </button>
 
         <button class="menu-btn" onclick="openMenu()">
-            View Menu
+            📋 View Menu
         </button>
 
         <button class="clear-btn" onclick="clearBill()">
-            Clear Bill
+            🗑️ Clear Bill
         </button>
 
     </section>
