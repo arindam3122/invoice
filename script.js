@@ -1,24 +1,16 @@
-
 // ================================================
 // RADHA MADHAV PRESS - COMPLETE BILLING SYSTEM
 // ================================================
 
 
 // ================================================
-// 1. PRODUCT DATA
+// 1. PRODUCT DATA (Cleared on load as requested)
 // ================================================
 
 let products = [];
 
-try {
-    products = JSON.parse(
-        localStorage.getItem("pressProducts") || "[]"
-    );
-
-    if (!Array.isArray(products)) products = [];
-} catch (error) {
-    products = [];
-}
+// Clear previous product data on page load so it doesn't persist
+localStorage.removeItem("pressProducts");
 
 let editingIndex = -1;
 
@@ -381,21 +373,43 @@ quantityInput.addEventListener("input", calculateTotal);
 
 
 // ================================================
-// 8. SAVE DATA
+// 8. ADD PRODUCT ON ENTER KEY PRESS
+// ================================================
+
+const formInputs = [
+    dateInput,
+    customerInput,
+    productInput,
+    priceInput,
+    quantityInput
+];
+
+formInputs.forEach(input => {
+    input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addProduct();
+        }
+    });
+});
+
+
+// ================================================
+// 9. SAVE DATA (Disabled for products on load, kept for active session)
 // ================================================
 
 function saveData() {
-
+    // Optional: if you don't want products saved in localStorage at all anymore, 
+    // you can leave this empty or keep it for temporary session usage.
     localStorage.setItem(
         "pressProducts",
         JSON.stringify(products)
     );
-
 }
 
 
 // ================================================
-// 9. ADD PRODUCT
+// 10. ADD PRODUCT
 // ================================================
 
 function addProduct() {
@@ -464,7 +478,7 @@ function addProduct() {
 
 
 // ================================================
-// 10. DISPLAY BILL TABLE
+// 11. DISPLAY BILL TABLE
 // ================================================
 
 function renderTable() {
@@ -561,7 +575,7 @@ function renderTable() {
 
 
 // ================================================
-// 11. UPDATE SUBTOTAL AND GRAND TOTAL
+// 12. UPDATE SUBTOTAL AND GRAND TOTAL
 // ================================================
 
 function updateSummary() {
@@ -597,7 +611,7 @@ deductionInput.addEventListener("input", updateSummary);
 
 
 // ================================================
-// 12. EDIT PRODUCT - POPUP
+// 13. EDIT PRODUCT - POPUP
 // ================================================
 
 function editProduct(index) {
@@ -627,7 +641,7 @@ function editProduct(index) {
 
 
 // ================================================
-// 13. SAVE EDITED PRODUCT
+// 14. SAVE EDITED PRODUCT
 // ================================================
 
 function saveEdit() {
@@ -707,7 +721,7 @@ function saveEdit() {
 
 
 // ================================================
-// 14. CLOSE EDIT POPUP
+// 15. CLOSE EDIT POPUP
 // ================================================
 
 function closeEdit() {
@@ -721,7 +735,7 @@ function closeEdit() {
 
 
 // ================================================
-// 15. DELETE PRODUCT
+// 16. DELETE PRODUCT
 // ================================================
 
 function deleteProduct(index) {
@@ -754,7 +768,7 @@ function deleteProduct(index) {
 
 
 // ================================================
-// 16. CLEAR INPUT FIELDS
+// 17. CLEAR INPUT FIELDS
 // ================================================
 
 function clearInputs() {
@@ -767,11 +781,14 @@ function clearInputs() {
 
     totalInput.value = "";
 
+    // Focus back on product name for quick typing
+    productInput.focus();
+
 }
 
 
 // ================================================
-// 17. CLEAR COMPLETE BILL
+// 18. CLEAR COMPLETE BILL
 // ================================================
 
 function clearBill() {
@@ -810,7 +827,7 @@ function clearBill() {
 
 
 // ================================================
-// 18. VIEW MENU
+// 19. VIEW MENU
 // ================================================
 
 function openMenu() {
@@ -859,7 +876,7 @@ function openMenu() {
 
 
 // ================================================
-// 19. CLOSE MENU
+// 20. CLOSE MENU
 // ================================================
 
 function closeMenu() {
@@ -871,7 +888,7 @@ function closeMenu() {
 
 
 // ================================================
-// 20. SELECT MENU PRODUCT
+// 21. SELECT MENU PRODUCT
 // ================================================
 
 function selectMenuItem(index) {
@@ -895,7 +912,7 @@ function selectMenuItem(index) {
 
 
 // ================================================
-// 21. CLOSE POPUPS ON OUTSIDE CLICK
+// 22. CLOSE POPUPS ON OUTSIDE CLICK
 // ================================================
 
 window.addEventListener("click", function (event) {
@@ -918,7 +935,7 @@ window.addEventListener("click", function (event) {
 
 
 // ================================================
-// 22. PROFESSIONAL PDF DOWNLOAD
+// 23. PROFESSIONAL PDF DOWNLOAD
 // ================================================
 
 
@@ -1495,4 +1512,3 @@ function downloadPDF() {
 // ================================================
 
 renderTable();
-
